@@ -8,6 +8,9 @@ function App() {
     setImage(e.target.files[0]);
   }
   const[message, setmessage] = useState("");
+
+  const [imageUrl, setImageUrl] = useState('');
+
   const handleSubmit =  async (e) => {
     e.preventDefault();
 
@@ -24,6 +27,10 @@ function App() {
         body: formData,
       });
       const res = await response.json();
+      if (res.path) {
+        setImageUrl(`http://127.0.0.1:5500/backend/${res.path}`);
+      }
+      
       setmessage(res.message || res.error);
      
     } catch (error) {
@@ -32,10 +39,12 @@ function App() {
     }
  
   }
+ 
 
   
   return (
     <div>
+    
       <h1>
         Input board image
       </h1>
@@ -43,7 +52,9 @@ function App() {
         <input type="file" accept="image/*" onChange={handleImageChange}/>
         <button type="submit">Upload</button>
       </form>
+      {imageUrl && <img src={imageUrl} alt=''/>}
       {message && <p>{message}</p>}
+    
       
     </div>
   );
